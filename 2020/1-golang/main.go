@@ -14,6 +14,27 @@ func main() {
 	}
 	numbers := readFile(wd + "/input.txt")
 
+	task1(numbers)
+	task2(numbers)
+}
+
+func task1(numbers []int) {
+	// Naive approach with deduplication
+	for nIndex, n := range numbers {
+		for mIndex, m := range numbers[nIndex+1:] {
+			if n+m == 2020 {
+				log.Printf(
+					"[%d:%d, %d:%d] %d * %d = %d",
+					nIndex, numbers[nIndex],
+					nIndex+mIndex+1, numbers[nIndex+mIndex+1],
+					n, m, n*m,
+				)
+			}
+		}
+	}
+}
+
+func task2(numbers []int) {
 	// Naive approach with deduplication
 	for nIndex, n := range numbers {
 		for mIndex, m := range numbers[nIndex+1:] {

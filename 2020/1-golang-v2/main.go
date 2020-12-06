@@ -20,6 +20,7 @@ func main() {
 
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
+
 	go task1(task1input, wg)
 	go task2(task2input, wg)
 	go func() {

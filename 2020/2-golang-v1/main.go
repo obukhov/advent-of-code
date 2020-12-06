@@ -15,7 +15,7 @@ func main() {
 		log.Fatalf("Failed getting working dir: %v", err)
 	}
 
-	records := common.ReadFile(wd + "/input.txt")
+	records := readFile(wd + "/input.txt")
 
 	task1(records)
 	task2(records)
@@ -26,22 +26,19 @@ func task1(records []record) {
 	for _, record := range records {
 		var (
 			cnt     int
-			//correct bool
 		)
 		for _, b := range record.password {
-			if rune(b) == record.symbol {
+			if b == record.symbol {
 				cnt++
 			}
 		}
 
 		if record.min <= cnt && cnt <= record.max {
 			total++
-			//correct = true
 		}
-		//log.Printf("Record %v count %d is correct: %v", record, cnt, correct)
 	}
 
-	log.Printf("Total number of correct passwords: %d", total)
+	log.Printf("Total number of correct passwords 1: %d", total)
 }
 
 func task2(records []record) {
@@ -54,7 +51,7 @@ func task2(records []record) {
 		}
 	}
 
-	log.Printf("Total number of correct passwords: %d", total)
+	log.Printf("Total number of correct passwords 2: %d", total)
 }
 
 type record struct {

@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+
 )
 
 func main() {
@@ -14,7 +15,7 @@ func main() {
 		log.Fatalf("Failed getting working dir: %v", err)
 	}
 
-	records := readFile(wd + "/input.txt")
+	records := common.ReadFile(wd + "/input.txt")
 
 	task1(records)
 	task2(records)

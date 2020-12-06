@@ -1,0 +1,100 @@
+package main
+
+import (
+	"log"
+	"os"
+	"strconv"
+	"sync"
+
+	"github.com/obukhov/advent-of-code/common"
+)
+
+func main() {
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Failed getting working dir: %v", err)
+	}
+
+	task1input := make(chan int, 200)
+	task2input := make(chan int, 200)
+
+	wg := &sync.WaitGroup{}
+	wg.Add(3)
+	go task1(task1input, wg)
+	go task2(task2input, wg)
+	go func() {
+		common.ReadFile(
+			wd+"/../1-golang-v1/input.txt",
+			func(line string) {
+				n, err := strconv.Atoi(line)
+				if err != nil {
+					log.Fatalf("Error converting number '%s': %v", line, err)
+				}
+				task1input <- n
+				task2input <- n
+			},
+			wg,
+		)
+
+		close(task1input)
+		close(task2input)
+	}()
+
+	wg.Wait()
+}
+
+func task1(input chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	numbers := make([]int, 0)
+	for {
+		select {
+		case m, open:= <-input:
+			if !open {
+				log.Printf("Task 1 has completed")
+				return
+			}
+			for nIndex, n := range numbers {
+				if n+m == 2020 {
+					log.Printf(
+						"[%d:%d, %d:%d] %d * %d = %d",
+						nIndex, numbers[nIndex],
+						len(numbers)+1, m,
+						n, m, n*m,
+					)
+				}
+			}
+			numbers = append(numbers, m)
+		}
+	}
+}
+
+func task2(input chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	numbers := make([]int, 0)
+	for {
+		select {
+		case r, open := <-input:
+			if !open {
+				log.Printf("Task 2 has completed")
+				return
+			}
+
+			for nIndex, n := range numbers {
+				for mIndex, m := range numbers[nIndex+1:] {
+					if n+m+r == 2020 {
+						log.Printf(
+							"[%d:%d, %d:%d, %d:%d] %d * %d * %d = %d",
+							nIndex, numbers[nIndex],
+							mIndex+nIndex+1, numbers[mIndex+1],
+							len(numbers)+1, r,
+							n, m, r, n*m*r,
+						)
+					}
+				}
+			}
+			numbers = append(numbers, r)
+		}
+	}
+}

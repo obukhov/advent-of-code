@@ -20,7 +20,7 @@ func main() {
 	task2input := make(chan map[string]string, 100)
 
 	wg := &sync.WaitGroup{}
-	wg.Add(2)
+	wg.Add(3)
 
 	go task1(task1input, wg)
 	go task2(task2input, wg)

@@ -40,7 +40,7 @@ func day4() {
 	go day4task2(task2input, wg)
 
 	go func() {
-		lib.ReadFile(
+		lib.ReadFileWg(
 			wd+"/input/day4.txt",
 			func (line string) {
 				var params = make(map[string]string)

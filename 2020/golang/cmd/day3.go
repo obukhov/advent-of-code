@@ -46,7 +46,7 @@ func day3() {
 	go day3task2(task2input, wg)
 
 	go func() {
-		lib.ReadFile(
+		lib.ReadFileWg(
 			wd+"/input/day3.txt",
 			func (line string) {
 				task1input <- line

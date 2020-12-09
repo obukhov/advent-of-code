@@ -58,7 +58,7 @@ func day7() {
 	go day7task2(task2input, wg)
 
 	go func() {
-		lib.ReadFile(
+		lib.ReadFileWg(
 			wd+"/input/day7.txt",
 			func (line string) {
 				subMatches := expFull.FindStringSubmatch(line)

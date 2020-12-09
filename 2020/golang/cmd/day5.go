@@ -39,7 +39,7 @@ func day5() {
 	go day5task2(task2input, wg)
 
 	go func() {
-		lib.ReadFile(
+		lib.ReadFileWg(
 			wd+"/input/day5.txt",
 			func (line string) {
 				seatId := 0

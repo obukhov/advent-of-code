@@ -37,7 +37,7 @@ func day1() {
 	go day1task1(task1input, wg)
 	go day1task2(task2input, wg)
 	go func() {
-		lib.ReadFile(
+		lib.ReadFileWg(
 			wd+"/input/day1.txt",
 			func(line string) {
 				n, err := strconv.Atoi(line)

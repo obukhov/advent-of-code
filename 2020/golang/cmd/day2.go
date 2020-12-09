@@ -1,7 +1,8 @@
-package main
+package cmd
 
 import (
-	"github.com/obukhov/advent-of-code/common"
+	"github.com/obukhov/advent-of-code/2020/golang/lib"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"regexp"
@@ -9,7 +10,27 @@ import (
 	"sync"
 )
 
-func main() {
+func init() {
+	rootCmd.AddCommand(day2cmd)
+}
+
+var day2cmd = &cobra.Command{
+	Use:   "day2",
+	Short: "Day 2 tasks",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		day2()
+	},
+}
+
+type record struct {
+	min      int
+	max      int
+	symbol   rune
+	password string
+}
+
+func day2() {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed getting working dir: %v", err)
@@ -26,11 +47,11 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
 
-	go task1(task1input, wg)
-	go task2(task2input, wg)
+	go day2task1(task1input, wg)
+	go day2task2(task2input, wg)
 	go func() {
-		common.ReadFile(
-			wd + "/../2-golang-v1/input.txt",
+		lib.ReadFile(
+			wd+"/input/day2.txt",
 			func (line string) {
 				matches := exp.FindAllStringSubmatch(line, 4)
 				if len(matches) < 1 || len(matches[0]) != 5 {
@@ -61,7 +82,7 @@ func main() {
 	wg.Wait()
 }
 
-func task1(input chan record, wg *sync.WaitGroup) {
+func day2task1(input chan record, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	var total int
@@ -83,7 +104,7 @@ func task1(input chan record, wg *sync.WaitGroup) {
 	log.Printf("Total number of correct passwords 1: %d", total)
 }
 
-func task2(input chan record, wg *sync.WaitGroup) {
+func day2task2(input chan record, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	var total int
@@ -98,9 +119,3 @@ func task2(input chan record, wg *sync.WaitGroup) {
 	log.Printf("Total number of correct passwords 2: %d", total)
 }
 
-type record struct {
-	min      int
-	max      int
-	symbol   rune
-	password string
-}

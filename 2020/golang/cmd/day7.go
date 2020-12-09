@@ -1,13 +1,27 @@
-package main
+package cmd
 
 import (
-	"github.com/obukhov/advent-of-code/common"
+	"github.com/obukhov/advent-of-code/2020/golang/lib"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"regexp"
 	"strconv"
 	"sync"
 )
+
+func init() {
+	rootCmd.AddCommand(day7cmd)
+}
+
+var day7cmd = &cobra.Command{
+	Use:   "day7",
+	Short: "Day 7 tasks",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		day7()
+	},
+}
 
 type bag string
 type set struct {
@@ -19,7 +33,7 @@ type rule struct {
 	contained []set
 }
 
-func main() {
+func day7() {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed getting working dir: %v", err)
@@ -40,12 +54,12 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
 
-	go task1(task1input, wg)
-	go task2(task2input, wg)
+	go day7task1(task1input, wg)
+	go day7task2(task2input, wg)
 
 	go func() {
-		common.ReadFile(
-			wd + "/input.txt",
+		lib.ReadFile(
+			wd+"/input/day7.txt",
 			func (line string) {
 				subMatches := expFull.FindStringSubmatch(line)
 				if len(subMatches) != 3 {
@@ -77,7 +91,7 @@ func main() {
 	wg.Wait()
 }
 
-func task1(input chan rule, wg *sync.WaitGroup) {
+func day7task1(input chan rule, wg *sync.WaitGroup) {
 	var reverseMap = make(map[bag][]bag)
 
 	for r := range input {
@@ -117,7 +131,7 @@ func findParents(reverseMap map[bag][]bag, node bag) map[bag]bool {
 	return result
 }
 
-func task2(input chan rule, wg *sync.WaitGroup) {
+func day7task2(input chan rule, wg *sync.WaitGroup) {
 	var descMap = make(map[bag][]set)
 
 	for r := range input {

@@ -1,16 +1,30 @@
-package main
+package cmd
 
 import (
-	"github.com/obukhov/advent-of-code/common"
+	"github.com/obukhov/advent-of-code/2020/golang/lib"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
-	"regexp"
 )
 
-func main() {
+func init() {
+	rootCmd.AddCommand(day4cmd)
+}
+
+var day4cmd = &cobra.Command{
+	Use:   "day4",
+	Short: "Day 4 tasks",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		day4()
+	},
+}
+
+func day4() {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed getting working dir: %v", err)
@@ -22,12 +36,12 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
 
-	go task1(task1input, wg)
-	go task2(task2input, wg)
+	go day4task1(task1input, wg)
+	go day4task2(task2input, wg)
 
 	go func() {
-		common.ReadFile(
-			wd + "/input.txt",
+		lib.ReadFile(
+			wd+"/input/day4.txt",
 			func (line string) {
 				var params = make(map[string]string)
 				if line != "" {
@@ -51,7 +65,7 @@ func main() {
 	wg.Wait()
 }
 
-func task1(input chan map[string]string, wg *sync.WaitGroup) {
+func day4task1(input chan map[string]string, wg *sync.WaitGroup) {
 	required := map[string]string{}
 	validCount := 0
 	required = map[string]string{
@@ -115,7 +129,7 @@ func createRegexpValidator(expString string) validatorFunc {
 }
 
 
-func task2(input chan map[string]string, wg *sync.WaitGroup) {
+func day4task2(input chan map[string]string, wg *sync.WaitGroup) {
 	var (
 		cmValidator = createYearValidator(150, 193)
 		inValidator = createYearValidator(59, 76)

@@ -1,11 +1,26 @@
-package main
+package cmd
 
 import (
-	"github.com/obukhov/advent-of-code/common"
+	"github.com/obukhov/advent-of-code/2020/golang/lib"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"sync"
 )
+
+func init() {
+	rootCmd.AddCommand(day3cmd)
+}
+
+var day3cmd = &cobra.Command{
+	Use:   "day3",
+	Short: "Day 3 tasks",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		day3()
+	},
+}
+
 const (
 	TREE = '#'
 )
@@ -15,12 +30,11 @@ type slope struct {
 	yStep int
 }
 
-func main() {
+func day3() {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed getting working dir: %v", err)
 	}
-
 
 	task1input := make(chan string, 100)
 	task2input := make(chan string, 100)
@@ -28,12 +42,12 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
 
-	go task1(task1input, wg)
-	go task2(task2input, wg)
+	go day3task1(task1input, wg)
+	go day3task2(task2input, wg)
 
 	go func() {
-		common.ReadFile(
-			wd + "/input.txt",
+		lib.ReadFile(
+			wd+"/input/day3.txt",
 			func (line string) {
 				task1input <- line
 				task2input <- line
@@ -48,7 +62,7 @@ func main() {
 	wg.Wait()
 }
 
-func task1(input chan string, wg *sync.WaitGroup) {
+func day3task1(input chan string, wg *sync.WaitGroup) {
 	var (
 		pos int
 		total int
@@ -65,7 +79,7 @@ func task1(input chan string, wg *sync.WaitGroup) {
 }
 
 
-func task2(input chan string, wg *sync.WaitGroup) {
+func day3task2(input chan string, wg *sync.WaitGroup) {
 	var (
 		lineNum int
 		slopes = []slope{

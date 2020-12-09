@@ -1,13 +1,29 @@
-package main
+package cmd
 
 import (
-	"github.com/obukhov/advent-of-code/common"
+	"github.com/obukhov/advent-of-code/2020/golang/lib"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"sync"
 )
 
-func main() {
+func init() {
+	rootCmd.AddCommand(day5cmd)
+}
+
+var day5cmd = &cobra.Command{
+	Use:   "day5",
+	Short: "Day 5 tasks",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		day5()
+	},
+}
+
+
+
+func day5() {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed getting working dir: %v", err)
@@ -19,12 +35,12 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
 
-	go task1(task1input, wg)
-	go task2(task2input, wg)
+	go day5task1(task1input, wg)
+	go day5task2(task2input, wg)
 
 	go func() {
-		common.ReadFile(
-			wd + "/input.txt",
+		lib.ReadFile(
+			wd+"/input/day5.txt",
 			func (line string) {
 				seatId := 0
 				for _, b := range line {
@@ -48,7 +64,7 @@ func main() {
 	wg.Wait()
 }
 
-func task1(input chan int, wg *sync.WaitGroup) {
+func day5task1(input chan int, wg *sync.WaitGroup) {
 	max := 0
 	for seatId := range input {
 		if seatId > max {
@@ -60,7 +76,7 @@ func task1(input chan int, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func task2(input chan int, wg *sync.WaitGroup) {
+func day5task2(input chan int, wg *sync.WaitGroup) {
 	stringMap := make([]bool, 1024, 1024)
 	for seatId := range input {
 		stringMap[seatId] = true

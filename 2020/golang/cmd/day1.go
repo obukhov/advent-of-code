@@ -1,15 +1,28 @@
-package main
+package cmd
 
 import (
+	"github.com/obukhov/advent-of-code/2020/golang/lib"
+	"github.com/spf13/cobra"
 	"log"
 	"os"
 	"strconv"
 	"sync"
-
-	"github.com/obukhov/advent-of-code/common"
 )
 
-func main() {
+func init() {
+	rootCmd.AddCommand(day1cmd)
+}
+
+var day1cmd = &cobra.Command{
+	Use:   "day1",
+	Short: "Day 1 tasks",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		day1()
+	},
+}
+
+func day1() {
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed getting working dir: %v", err)
@@ -21,11 +34,11 @@ func main() {
 	wg := &sync.WaitGroup{}
 	wg.Add(3)
 
-	go task1(task1input, wg)
-	go task2(task2input, wg)
+	go day1task1(task1input, wg)
+	go day1task2(task2input, wg)
 	go func() {
-		common.ReadFile(
-			wd+"/../1-golang-v1/input.txt",
+		lib.ReadFile(
+			wd+"/input/day1.txt",
 			func(line string) {
 				n, err := strconv.Atoi(line)
 				if err != nil {
@@ -44,7 +57,7 @@ func main() {
 	wg.Wait()
 }
 
-func task1(input chan int, wg *sync.WaitGroup) {
+func day1task1(input chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	numbers := make([]int, 0)
@@ -70,7 +83,7 @@ func task1(input chan int, wg *sync.WaitGroup) {
 	}
 }
 
-func task2(input chan int, wg *sync.WaitGroup) {
+func day1task2(input chan int, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	numbers := make([]int, 0)
